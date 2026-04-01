@@ -35,17 +35,23 @@ public sealed partial class ECS : Node
     /// <param name="guid">GUID of the node</param>
     /// <returns>World, Entity or System</returns>
     // ReSharper disable once InconsistentNaming
-    public Node GetECSNodeByGuid(int guid)
+    public Entity GetEntityByGuid(int guid)
     {
         foreach (World world in GetChildren().OfType<World>())
-        {
-            if (world.Guid == guid) return world;
-            foreach (var entity in world.GetNode<Node>("Entities").GetChildren().OfType<Entity>())
+        { //if (world.Guid == guid) return world;
+            foreach (var entity in world.Entities)
             {
                 if (entity.Guid == guid) return entity;
             }
         }
-
+        return null;
+    }
+    public Node GetECSNodeByGuid(int guid)
+    {
+        foreach (World world in GetChildren().OfType<World>())
+        { 
+            if (world.Guid == guid) return world;
+        }
         return null;
     }
 

@@ -5,22 +5,18 @@ using Godot;
 namespace TileSharp.Ecs;
 
 [GlobalClass, Icon("res://Assets/EditorIcons/Entity.svg")]
-public partial class Entity : Node
+public partial class Entity : Resource
 {
-    /// <summary>
-    /// This entity's global unique identifier. Gotten from the ECS Autoload when initialized. Cannot be set.
-    /// </summary>
-    public int Guid { get; init; } = ECS.Instance.LastGuid;
-
-    public StringName EntityName;
-
-    public Entity() => EntityName = "Entity";
-    public Entity(string name) => EntityName = name;
-    public Entity(StringName name) => EntityName = name;
-
     private readonly List<Component> _components = new();
     public IReadOnlyList<Component> Components => _components;
+    public int Guid { get; } = ECS.Instance.LastGuid;
+    public World World { get; internal set; }
+    public string EntityName;
     
+    public Entity() => EntityName = Guid.ToString();
+
+    public Entity(string name) => EntityName = name;
+
     /// <summary>
     /// Creates a new component and adds it to the entity.
     /// </summary>
@@ -49,51 +45,25 @@ public partial class Entity : Node
             _components[existingIndex] = component;
             return component;
         }
+
         _components.Add(component);
-        GetWorld().IndexEntity(this, component);
+        World.IndexEntityComponent(this, component);
         return component;
     }
-    
+
     public void RemoveComponent<T>() where T : Component
     {
         var component = _components.Find(x => x.GetType() == typeof(T));
-        component?.Free();
+        if (component != null)
+        {
+            World.UnindexEntityComponent(this, component);
+            _components.Remove(component);
+            //component.Free();
+        }
     }
 
-    public Component GetComponent<T>() where T : Component
-    {
-        return _components.Find(x => x.GetType() == typeof(T));
-    }
-
-    /// <summary>
-    /// Check if this entity has a specific component.
-    /// </summary>
-    /// <typeparam name="T">A component type.</typeparam>
-    /// <returns>bool</returns>
-    public bool HasComponent<T>() where T : Component
-    {
-        return GetComponent<T>() != null;
-    }
-
-    /// <summary>
-    /// Gets the World this entity belongs to.
-    /// </summary>
-    /// <returns>The world it belongs to.</returns>
-    public World GetWorld() => GetParent<Node>().GetParent<World>();
-
-    public override void _ExitTree()
-    {
-        GetWorld().UnindexEntity(this);
-    }
-
-    // Called when the node enters the scene tree for the first time.
-    public override void _Ready()
-    {
-        
-    }
-
-    // Called every frame. 'delta' is the elapsed time since the previous frame.
-    public override void _Process(double delta)
-    {
-    }
+    public Component GetComponent<T>() where T : Component => 
+        _components.Find(x => x.GetType() == typeof(T));
+    
+    public bool HasComponent<T>() where T : Component => GetComponent<T>() != null;
 }

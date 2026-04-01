@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="HelloComponent" format=3 uid="uid://c2gvq7b7gl3pg"]
+
+[ext_resource type="Script" uid="uid://cr3hl14euapr7" path="res://Scripts/Components/HelloComponent.cs" id="1_107kb"]
+
+[resource]
+script = ExtResource("1_107kb")
+Text = "Hi world!"
+metadata/_custom_type_script = "uid://cr3hl14euapr7"
