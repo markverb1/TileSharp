@@ -1,7 +1,10 @@
 using Godot;
+using TileSharp.Ecs;
 
 [GlobalClass]
-public partial class HelloComponent : Component
+public partial class HelloComponent : ComponentBase
 {
-    [Export] private string Text = "Hello World!";
+    [Export] public string Text = "Hello world!";
+    [Export] public int Iterations = 1;
+    public int IterationCount = 0;
 }

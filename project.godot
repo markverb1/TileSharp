@@ -23,7 +23,6 @@ config/icon="res://icon.svg"
 
 [autoload]
 
-Util="*uid://b75r6d4qh5run"
 ECS="*uid://vsk0u10satq1"
 
 [dotnet]

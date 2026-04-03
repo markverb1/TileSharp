@@ -1,7 +1,8 @@
 using System;
 using System.Linq;
 using Godot;
-using TileSharp.Ecs;
+
+namespace TileSharp.Ecs;
 
 [Icon("res://Assets/EditorIcons/Ecs.svg")]
 public sealed partial class ECS : Node

@@ -1,3 +1,35 @@
 [gd_scene format=3 uid="uid://btas0uxhmm6lr"]
 
-[node name="Node2D" type="Node2D" unique_id=1963565726]
+[node name="Control" type="Control" unique_id=1336701102]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Inspector" type="Panel" parent="." unique_id=566501378]
+layout_mode = 0
+offset_right = 420.0
+offset_bottom = 565.0
+
+[node name="ItemList" type="ItemList" parent="Inspector" unique_id=1943226684]
+layout_mode = 1
+anchors_preset = 9
+anchor_bottom = 1.0
+offset_left = 6.0
+offset_top = 6.0
+offset_right = 192.0
+offset_bottom = -6.0
+grow_vertical = 2
+
+[node name="OptionButton" type="OptionButton" parent="Inspector" unique_id=1645897774]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -224.0
+offset_top = 6.0
+offset_right = -6.0
+offset_bottom = 26.0
+grow_horizontal = 0

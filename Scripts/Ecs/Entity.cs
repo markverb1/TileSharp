@@ -7,8 +7,8 @@ namespace TileSharp.Ecs;
 [GlobalClass, Icon("res://Assets/EditorIcons/Entity.svg")]
 public partial class Entity : Resource
 {
-    private readonly List<Component> _components = new();
-    public IReadOnlyList<Component> Components => _components;
+    private readonly List<ComponentBase> _components = new();
+    public IReadOnlyList<ComponentBase> Components => _components;
     public int Guid { get; } = ECS.Instance.LastGuid;
     public World World { get; internal set; }
     public string EntityName;
@@ -22,7 +22,7 @@ public partial class Entity : Resource
     /// </summary>
     /// <typeparam name="T">Type of component.</typeparam>
     /// <returns>Created component.</returns>
-    public Component AddComponent<T>() where T : Component, new()
+    public ComponentBase AddComponent<T>() where T : ComponentBase, new()
     {
         var c = _components.OfType<T>().FirstOrDefault();
         if (c != null) return c;
@@ -36,7 +36,7 @@ public partial class Entity : Resource
     /// </summary>
     /// <param name="componentClass">The component node.</param>
     /// <returns>The newly added component.</returns>
-    public Component AddComponent(Component component)
+    public ComponentBase AddComponent(ComponentBase component)
     {
         var type = component.GetType();
         var existingIndex = _components.FindIndex(x => x.GetType() == type);
@@ -51,7 +51,7 @@ public partial class Entity : Resource
         return component;
     }
 
-    public void RemoveComponent<T>() where T : Component
+    public void RemoveComponent<T>() where T : ComponentBase
     {
         var component = _components.Find(x => x.GetType() == typeof(T));
         if (component != null)
@@ -62,8 +62,9 @@ public partial class Entity : Resource
         }
     }
 
-    public Component GetComponent<T>() where T : Component => 
-        _components.Find(x => x.GetType() == typeof(T));
-    
-    public bool HasComponent<T>() where T : Component => GetComponent<T>() != null;
+    public T GetComponent<T>() where T : ComponentBase
+    {
+        return _components.Find(x => x.GetType() == typeof(T)) as T;
+    }
+    public bool HasComponent<T>() where T : ComponentBase => GetComponent<T>() != null;
 }
