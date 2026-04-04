@@ -7,7 +7,7 @@ namespace TileSharp.Systems;
 
 public partial class HelloSystem : SystemBase
 {
-    protected override List<Type> WhitelistedTypes { get; } = [typeof(HelloComponent)];
+    protected override List<Type> WhitelistedTypes { get; } = [typeof(Components.HelloComponent)];
     protected override List<Type> BlacklistedTypes { get; } = [];
 
     protected override void _SystemReady()
@@ -19,7 +19,7 @@ public partial class HelloSystem : SystemBase
     {
         foreach (var entity in Entities)
         {
-            var component = entity.GetComponent<HelloComponent>();
+            var component = entity.GetComponent<Components.HelloComponent>();
             if (component.IterationCount < component.Iterations){
                 component.IterationCount++;
                 GD.Print(component.Text);

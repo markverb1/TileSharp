@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://dby01lhp1bc44"]
+
+[ext_resource type="Texture2D" uid="uid://1bdtibcu4u11" path="res://Assets/Textures/dragunov.png" id="1_ulcgi"]
+
+[node name="World" type="Node2D" unique_id=1762005624]
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=2106403414]
+texture_filter = 1
+position = Vector2(83, 28)
+texture = ExtResource("1_ulcgi")

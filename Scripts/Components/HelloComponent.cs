@@ -1,6 +1,8 @@
 using Godot;
 using TileSharp.Ecs;
 
+namespace TileSharp.Components;
+
 [GlobalClass]
 public partial class HelloComponent : ComponentBase
 {

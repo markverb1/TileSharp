@@ -15,7 +15,7 @@ compatibility/default_parent_skeleton_in_mesh_instance_3d=true
 [application]
 
 config/name="TileSharp"
-run/main_scene="res://node_2d.tscn"
+run/main_scene="res://Assets/Scenes/viewport.tscn"
 config/features=PackedStringArray("4.6", "C#", "GL Compatibility")
 boot_splash/stretch_mode=0
 boot_splash/image="uid://djni1awt8564k"
@@ -25,6 +25,11 @@ config/icon="res://icon.svg"
 
 ECS="*uid://vsk0u10satq1"
 
+[display]
+
+window/size/viewport_width=640
+window/size/viewport_height=360
+
 [dotnet]
 
 project/assembly_name="TileSharp"
@@ -33,12 +38,26 @@ project/assembly_name="TileSharp"
 
 script/templates_search_path="res://Assets/ScriptTemplates"
 
+[input]
+
+zoom_in={
+"deadzone": 0.2,
+"events": [Object(InputEventMouseButton,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"button_mask":0,"position":Vector2(0, 0),"global_position":Vector2(0, 0),"factor":1.0,"button_index":4,"canceled":false,"pressed":false,"double_click":false,"script":null)
+]
+}
+zoom_out={
+"deadzone": 0.2,
+"events": [Object(InputEventMouseButton,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"button_mask":0,"position":Vector2(0, 0),"global_position":Vector2(0, 0),"factor":1.0,"button_index":5,"canceled":false,"pressed":false,"double_click":false,"script":null)
+]
+}
+
 [physics]
 
 3d/physics_engine="Jolt Physics"
 
 [rendering]
 
+textures/canvas_textures/default_texture_filter=0
 rendering_device/driver.windows="d3d12"
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"

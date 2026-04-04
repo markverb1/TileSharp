@@ -15,6 +15,12 @@ public partial class World : Node
 
     private List<Entity> _entities = new();
     public IReadOnlyList<Entity> Entities => _entities;
+
+    private SubViewport _subViewport;
+    public SubViewport Viewport {
+        get => _subViewport;
+        set => _subViewport ??= value;
+    }
     
     public event Action<Type, Entity> OnEntityAddedToIndex;
     public event Action<Type, Entity> OnEntityRemovedFromIndex;
@@ -145,7 +151,7 @@ public partial class World : Node
     public Entity AddEntity(Entity entity)
     {
         //entity.Name = entity.EntityName + '_' + entity.Guid;
-        entity.World = this;
+        entity.MyWorld = this;
         _entities.Add(entity);
         IndexEntity(entity);
         return entity;
@@ -158,7 +164,7 @@ public partial class World : Node
     public Entity AddEntity()
     {
         var entity = new Entity();
-        entity.World = this;
+        entity.MyWorld = this;
         _entities.Add(entity);
         return entity;
     }
@@ -171,7 +177,7 @@ public partial class World : Node
     public Entity AddEntity(string name)
     {
         var entity = new Entity(name);
-        entity.World = this;
+        entity.MyWorld = this;
         _entities.Add(entity);
         return entity;
     }
@@ -199,7 +205,7 @@ public partial class World : Node
     {
         AddSystem<HelloSystem>();
         var ent = AddEntity();
-        ent.AddComponent(GD.Load<HelloComponent>("uid://c2gvq7b7gl3pg"));
+        ent.AddComponent(GD.Load<Components.HelloComponent>("uid://c2gvq7b7gl3pg"));
     }
 
     public override void _Process(double delta)

@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="BasicInfoComponent" format=3 uid="uid://c1ahwhalspod5"]
+
+[ext_resource type="Script" uid="uid://bsxhcuehrdooj" path="res://Scripts/Components/BasicInfoComponent.cs" id="1_tld3b"]
+
+[resource]
+script = ExtResource("1_tld3b")
+FullName = "Test name"
+ShortName = "Test"
+Description = "Description here bla bla"
+metadata/_custom_type_script = "uid://bsxhcuehrdooj"

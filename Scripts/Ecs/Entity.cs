@@ -10,8 +10,8 @@ public partial class Entity : Resource
     private readonly List<ComponentBase> _components = new();
     public IReadOnlyList<ComponentBase> Components => _components;
     public int Guid { get; } = ECS.Instance.LastGuid;
-    public World World { get; internal set; }
-    public string EntityName;
+    public World MyWorld { get; internal set; }
+    public StringName EntityName;
     
     public Entity() => EntityName = Guid.ToString();
 
@@ -47,7 +47,7 @@ public partial class Entity : Resource
         }
 
         _components.Add(component);
-        World.IndexEntityComponent(this, component);
+        MyWorld.IndexEntityComponent(this, component);
         return component;
     }
 
@@ -56,7 +56,7 @@ public partial class Entity : Resource
         var component = _components.Find(x => x.GetType() == typeof(T));
         if (component != null)
         {
-            World.UnindexEntityComponent(this, component);
+            MyWorld.UnindexEntityComponent(this, component);
             _components.Remove(component);
             //component.Free();
         }

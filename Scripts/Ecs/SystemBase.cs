@@ -29,7 +29,7 @@ public abstract partial class SystemBase : Node
     public sealed override void _Ready()
     {
         World = GetParent<World>();
-        Entities = World.QueryEntities(typeof(HelloComponent));
+        Entities = World.QueryEntities(typeof(Components.HelloComponent));
         World.OnEntityAddedToIndex += HandleAddToIndex;
         World.OnEntityRemovedFromIndex += HandleRemoveFromIndex;
         _SystemReady();

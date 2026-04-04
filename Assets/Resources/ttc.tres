@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="TileTransformComponent" format=3 uid="uid://culmnebtyphg1"]
+
+[ext_resource type="Script" uid="uid://d32todyt1d4vb" path="res://Scripts/Components/TileTransformComponent.cs" id="1_8ul6w"]
+
+[resource]
+script = ExtResource("1_8ul6w")
+Position = Vector2i(4, 5)
+metadata/_custom_type_script = "uid://d32todyt1d4vb"
