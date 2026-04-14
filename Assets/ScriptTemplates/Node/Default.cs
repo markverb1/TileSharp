@@ -1,6 +1,7 @@
 // meta-name: Default
 // meta-description: Base template for Node with default Godot cycle methods. Project edition.
 // meta-default: true
+using System;
 using _BINDINGS_NAMESPACE_;
 using TileSharp.Ecs;
 

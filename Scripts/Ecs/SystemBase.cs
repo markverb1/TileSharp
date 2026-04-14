@@ -14,13 +14,13 @@ public abstract partial class SystemBase : Node
     protected abstract List<Type> WhitelistedTypes { get; }
     protected abstract List<Type> BlacklistedTypes { get; }
 
-    private void HandleAddToIndex(Type type, Entity entity)
+    protected void HandleAddToIndex(Type type, Entity entity)
     {
         if (WhitelistedTypes.Contains(type) && !BlacklistedTypes.Contains(type))
             Entities.Add(entity);
     }
 
-    private void HandleRemoveFromIndex(Type type, Entity entity)
+    protected void HandleRemoveFromIndex(Type type, Entity entity)
     {
         if (WhitelistedTypes.Contains(type) && !BlacklistedTypes.Contains(type) && Entities.Contains(entity))
             Entities.Remove(entity);
@@ -29,7 +29,7 @@ public abstract partial class SystemBase : Node
     public sealed override void _Ready()
     {
         World = GetParent<World>();
-        Entities = World.QueryEntities(typeof(Components.HelloComponent));
+        Entities = World.QueryEntities(WhitelistedTypes, BlacklistedTypes);
         World.OnEntityAddedToIndex += HandleAddToIndex;
         World.OnEntityRemovedFromIndex += HandleRemoveFromIndex;
         _SystemReady();

@@ -1,10 +1,14 @@
 [gd_scene format=3 uid="uid://dby01lhp1bc44"]
 
-[ext_resource type="Texture2D" uid="uid://1bdtibcu4u11" path="res://Assets/Textures/dragunov.png" id="1_ulcgi"]
+[ext_resource type="Texture2D" uid="uid://cr7fdgxuhaj03" path="res://Assets/Textures/NuTileTemplate.png" id="1_ai050"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_njmut"]
+atlas = ExtResource("1_ai050")
+region = Rect2(64, 0, 32, 32)
 
 [node name="World" type="Node2D" unique_id=1762005624]
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=2106403414]
 texture_filter = 1
 position = Vector2(83, 28)
-texture = ExtResource("1_ulcgi")
+texture = SubResource("AtlasTexture_njmut")

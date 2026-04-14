@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using _BINDINGS_NAMESPACE_;
 using TileSharp.Ecs;
 

@@ -1,3 +1,4 @@
+using System;
 using _BINDINGS_NAMESPACE_;
 using TileSharp.Ecs;
 

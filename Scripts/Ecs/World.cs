@@ -203,9 +203,7 @@ public partial class World : Node
 
     public override void _Ready()
     {
-        AddSystem<HelloSystem>();
-        var ent = AddEntity();
-        ent.AddComponent(GD.Load<Components.HelloComponent>("uid://c2gvq7b7gl3pg"));
+
     }
 
     public override void _Process(double delta)

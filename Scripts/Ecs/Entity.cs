@@ -28,14 +28,13 @@ public partial class Entity : Resource
         if (c != null) return c;
         var component = new T();
         _components.Add(component);
+        MyWorld.IndexEntityComponent(this, component);
         return component;
     }
 
     /// <summary>
     /// Adds a component. If the component type already exists, this function replaces it.
     /// </summary>
-    /// <param name="componentClass">The component node.</param>
-    /// <returns>The newly added component.</returns>
     public ComponentBase AddComponent(ComponentBase component)
     {
         var type = component.GetType();

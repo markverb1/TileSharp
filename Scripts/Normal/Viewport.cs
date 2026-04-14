@@ -2,6 +2,7 @@ using System.Linq;
 using Godot;
 using TileSharp.Components;
 using TileSharp.Ecs;
+using TileSharp.Systems;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
 
@@ -36,7 +37,10 @@ public partial class Viewport : Control
 
         _viewportContainer = GetNode<SubViewportContainer>("ViewportContainer");
         ECS.Instance.WorldCreated += HandleWorldCreated;
-        ECS.Instance.CreateWorld("World");
+        var world = ECS.Instance.CreateWorld("World");
+        var entity = world.AddEntity();
+        entity.AddComponent(GD.Load<TileGridComponent>("uid://2vskfk3250mq"));
+        world.AddSystem<TileGridSystem>();
     }
 
     public override void _Process(double delta)
