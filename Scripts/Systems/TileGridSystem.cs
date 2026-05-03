@@ -41,22 +41,24 @@ public partial class TileGridSystem : SystemBase
             var tgComponent = entity.GetComponent<TileGridComponent>();
             if (!tgComponent.FirstTimeProcessed)
             {
-                tgComponent.Tiles.Add(new Vector2I(1, 1), true);
-                tgComponent.Tiles.Add(new Vector2I(1, 2), true);
-                tgComponent.Tiles.Add(new Vector2I(1, 3), true);
-                tgComponent.Tiles.Add(new Vector2I(2, 1), true);
+                var tr = GD.Load<TileResource>("uid://17y15h15dqae");
+
+                tgComponent.Tiles.Add(new Vector2I(1, 1), tr);
+                tgComponent.Tiles.Add(new Vector2I(1, 2), tr);
+                tgComponent.Tiles.Add(new Vector2I(1, 3), tr);
+                tgComponent.Tiles.Add(new Vector2I(2, 1), tr);
                 //tgComponent.Tiles.Add(new Vector2I(2, 2), true);
-                tgComponent.Tiles.Add(new Vector2I(2, 3), true);
-                tgComponent.Tiles.Add(new Vector2I(3, 1), true);
-                tgComponent.Tiles.Add(new Vector2I(3, 2), true);
-                tgComponent.Tiles.Add(new Vector2I(3, 3), true);
+                tgComponent.Tiles.Add(new Vector2I(2, 3), tr);
+                tgComponent.Tiles.Add(new Vector2I(3, 1), tr);
+                tgComponent.Tiles.Add(new Vector2I(3, 2), tr);
+                tgComponent.Tiles.Add(new Vector2I(3, 3), tr);
                 foreach (var layer in _layers) layer.TileSet = tgComponent.Tileset;
                 tgComponent.FirstTimeProcessed = true;
             }
 
             foreach (var tile in tgComponent.Tiles)
             {
-                if (!tile.Value) continue;
+                if (tile.Value is null) continue;
                 var bitmask = GetBitMask(tgComponent.Tiles, tile.Key);
                 int layerIdx = 0;
                 foreach (var layer in _layers)
@@ -69,30 +71,30 @@ public partial class TileGridSystem : SystemBase
         }
     }
 
-    TileGridComponent.Mask GetBitMask(Dictionary<Vector2I, bool> tiles, Vector2I origin)
+    TileGridComponent.Mask GetBitMask(Dictionary<Vector2I, TileResource> tiles, Vector2I origin)
     {
         TileGridComponent.Mask mask = 0;
 
-        if (GetNeighbor(tiles, origin, new Vector2I(0, -1))) mask |= TileGridComponent.Mask.PresentN;
+        if (GetNeighbor(tiles, origin, new Vector2I(0, -1)) is not null) mask |= TileGridComponent.Mask.PresentN;
         else mask |= TileGridComponent.Mask.AbsentN;
-        if (GetNeighbor(tiles, origin, new Vector2I(0, 1))) mask |= TileGridComponent.Mask.PresentS;
+        if (GetNeighbor(tiles, origin, new Vector2I(0, 1)) is not null) mask |= TileGridComponent.Mask.PresentS;
         else mask |= TileGridComponent.Mask.AbsentS;
-        if (GetNeighbor(tiles, origin, new Vector2I(1, 0))) mask |= TileGridComponent.Mask.PresentE;
+        if (GetNeighbor(tiles, origin, new Vector2I(1, 0)) is not null) mask |= TileGridComponent.Mask.PresentE;
         else mask |= TileGridComponent.Mask.AbsentE;
-        if (GetNeighbor(tiles, origin, new Vector2I(-1, 0))) mask |= TileGridComponent.Mask.PresentW;
+        if (GetNeighbor(tiles, origin, new Vector2I(-1, 0)) is not null) mask |= TileGridComponent.Mask.PresentW;
         else mask |= TileGridComponent.Mask.AbsentW;
-        if (GetNeighbor(tiles, origin, new Vector2I(1, -1))) mask |= TileGridComponent.Mask.PresentNE;
+        if (GetNeighbor(tiles, origin, new Vector2I(1, -1)) is not null) mask |= TileGridComponent.Mask.PresentNE;
         else mask |= TileGridComponent.Mask.AbsentNE;
-        if (GetNeighbor(tiles, origin, new Vector2I(1, 1))) mask |= TileGridComponent.Mask.PresentSE;
+        if (GetNeighbor(tiles, origin, new Vector2I(1, 1)) is not null) mask |= TileGridComponent.Mask.PresentSE;
         else mask |= TileGridComponent.Mask.AbsentSE;
-        if (GetNeighbor(tiles, origin, new Vector2I(-1, -1))) mask |= TileGridComponent.Mask.PresentNW;
+        if (GetNeighbor(tiles, origin, new Vector2I(-1, -1)) is not null) mask |= TileGridComponent.Mask.PresentNW;
         else mask |= TileGridComponent.Mask.AbsentNW;
-        if (GetNeighbor(tiles, origin, new Vector2I(-1, 1))) mask |= TileGridComponent.Mask.PresentSW;
+        if (GetNeighbor(tiles, origin, new Vector2I(-1, 1)) is not null) mask |= TileGridComponent.Mask.PresentSW;
         else mask |= TileGridComponent.Mask.AbsentSW;
 
         return mask;
     }
 
-    bool GetNeighbor(Dictionary<Vector2I, bool> tiles, Vector2I origin, Vector2I offset) =>
-        tiles.GetValueOrDefault(origin + offset, false);
+    TileResource GetNeighbor(Dictionary<Vector2I, TileResource> tiles, Vector2I origin, Vector2I offset) =>
+        tiles.GetValueOrDefault(origin + offset, null);
 }

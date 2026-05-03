@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="TileResource" format=3 uid="uid://c2i8mcevjn4kc"]
+
+[ext_resource type="Script" uid="uid://cy2vqomhfj6ke" path="res://Scripts/Classes/TileResource.cs" id="1_e1qea"]
+
+[resource]
+script = ExtResource("1_e1qea")
+Mapping = null
+metadata/_custom_type_script = "uid://cy2vqomhfj6ke"

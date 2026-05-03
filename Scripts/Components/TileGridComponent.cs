@@ -48,7 +48,7 @@ public partial class TileGridComponent : ComponentBase
         0
     ];
 
-    public Dictionary<Vector2I, bool> Tiles = new();
+    public Dictionary<Vector2I, TileResource> Tiles = new();
 
     public bool FirstTimeProcessed = false;
 
