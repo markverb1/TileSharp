@@ -47,10 +47,10 @@ public partial class TileGridComponent : ComponentBase
         Mask.PresentS | Mask.PresentW | Mask.AbsentSW,
         0
     ];
-
+    
     public Dictionary<Vector2I, TileResource> Tiles = new();
 
     public bool FirstTimeProcessed = false;
 
-    [Export] public TileSet Tileset;
+    public Vector2I TileSize { get; private set; } = new Vector2I(32, 32);
 }

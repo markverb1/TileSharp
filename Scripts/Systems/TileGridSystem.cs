@@ -10,9 +10,26 @@ namespace TileSharp.Systems;
 public partial class TileGridSystem : SystemBase
 {
     public Node2D TilesParent { get; private set; }
+
     protected override List<Type> WhitelistedTypes { get; } = [typeof(TileGridComponent)];
     protected override List<Type> BlacklistedTypes { get; } = [];
+
     private readonly List<TileMapLayer> _layers = [];
+    private TileSet _tileSet = new();
+    private Dictionary<Texture, int> _textureToAtlasId = new();
+
+    public int GetAtlasTextureId(Texture2D texture)
+    {
+        if (texture is null) return -1;
+        if (_textureToAtlasId.TryGetValue(texture ?? new Texture2D(), out var atlasId)) return atlasId;
+        var source = new TileSetAtlasSource();
+        source.TextureRegionSize = _tileSet.TileSize;
+        source.Texture = texture;
+        for (int i = 0; i < 14; i++) source.CreateTile(new Vector2I(i % 7, i / 7));
+        int id = _tileSet.AddSource(source);
+        _textureToAtlasId[texture] = id;
+        return id;
+    }
 
     protected override void _SystemReady()
     {
@@ -21,13 +38,14 @@ public partial class TileGridSystem : SystemBase
         World.Viewport.AddChild(TilesParent);
 
         var tgComponent = new TileGridComponent();
-        var idx = 0;
-
-        foreach (var layer in tgComponent.DefaultNeighborMapping)
+        //var idx = 0;
+        _tileSet.TileSize =  new Vector2I(32, 32);
+        //_tileSet.TileSize = tgComponent.TileSize;
+        for (int idx = 0; idx < tgComponent.DefaultNeighborMapping.Length; idx++)
         {
             var tileLayer = new TileMapLayer();
             _layers.Add(tileLayer);
-            tileLayer.Name = idx++.ToString();
+            tileLayer.Name = idx.ToString();
             TilesParent.AddChild(tileLayer);
             TilesParent.MoveChild(tileLayer, 0);
         }
@@ -41,18 +59,19 @@ public partial class TileGridSystem : SystemBase
             var tgComponent = entity.GetComponent<TileGridComponent>();
             if (!tgComponent.FirstTimeProcessed)
             {
-                var tr = GD.Load<TileResource>("uid://17y15h15dqae");
+                var example = GD.Load<TileResource>("res://Assets/Resources/TileResource/example.tres");
+                var wall = GD.Load<TileResource>("res://Assets/Resources/TileResource/wall.tres");
 
-                tgComponent.Tiles.Add(new Vector2I(1, 1), tr);
-                tgComponent.Tiles.Add(new Vector2I(1, 2), tr);
-                tgComponent.Tiles.Add(new Vector2I(1, 3), tr);
-                tgComponent.Tiles.Add(new Vector2I(2, 1), tr);
+                tgComponent.Tiles.Add(new Vector2I(1, 1), wall);
+                tgComponent.Tiles.Add(new Vector2I(1, 2), wall);
+                tgComponent.Tiles.Add(new Vector2I(1, 3), wall);
+                tgComponent.Tiles.Add(new Vector2I(2, 1), example);
                 //tgComponent.Tiles.Add(new Vector2I(2, 2), true);
-                tgComponent.Tiles.Add(new Vector2I(2, 3), tr);
-                tgComponent.Tiles.Add(new Vector2I(3, 1), tr);
-                tgComponent.Tiles.Add(new Vector2I(3, 2), tr);
-                tgComponent.Tiles.Add(new Vector2I(3, 3), tr);
-                foreach (var layer in _layers) layer.TileSet = tgComponent.Tileset;
+                tgComponent.Tiles.Add(new Vector2I(2, 3), wall);
+                tgComponent.Tiles.Add(new Vector2I(3, 1), example);
+                tgComponent.Tiles.Add(new Vector2I(3, 2), wall);
+                tgComponent.Tiles.Add(new Vector2I(3, 3), example);
+                foreach (var layer in _layers) layer.TileSet = _tileSet;
                 tgComponent.FirstTimeProcessed = true;
             }
 
@@ -64,7 +83,8 @@ public partial class TileGridSystem : SystemBase
                 foreach (var layer in _layers)
                 {
                     if (bitmask.HasFlag(tgComponent.DefaultNeighborMapping[layerIdx]))
-                        layer.SetCell(tile.Key, 2, new Vector2I(layerIdx % 7, layerIdx / 7));
+                        layer.SetCell(tile.Key, GetAtlasTextureId(tile.Value.TileTexture),
+                            new Vector2I(layerIdx % 7, layerIdx / 7));
                     layerIdx++;
                 }
             }

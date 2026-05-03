@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="TileResource" format=3 uid="uid://cr2opjcqe6nbe"]
+
+[ext_resource type="Texture2D" uid="uid://cr7fdgxuhaj03" path="res://Assets/Textures/NuTileTemplate.png" id="1_jt3er"]
+[ext_resource type="Script" uid="uid://cy2vqomhfj6ke" path="res://Scripts/Classes/TileResource.cs" id="1_ngex7"]
+
+[resource]
+script = ExtResource("1_ngex7")
+TileTexture = ExtResource("1_jt3er")
+Mapping = null
+metadata/_custom_type_script = "uid://cy2vqomhfj6ke"
