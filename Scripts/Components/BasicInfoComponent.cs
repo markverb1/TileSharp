@@ -1,6 +1,5 @@
 using Godot;
 using TileSharp.Ecs;
-using YamlDotNet.Serialization;
 
 namespace TileSharp.Components;
 

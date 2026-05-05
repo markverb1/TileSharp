@@ -3,7 +3,4 @@ using Godot;
 namespace TileSharp.Ecs;
 
 [GlobalClass]
-public partial class ComponentBase : Resource
-{
-
-}
+public abstract partial class ComponentBase : Resource;

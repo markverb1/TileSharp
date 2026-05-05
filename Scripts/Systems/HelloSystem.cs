@@ -7,8 +7,8 @@ namespace TileSharp.Systems;
 
 public partial class HelloSystem : SystemBase
 {
-    protected override List<Type> WhitelistedTypes { get; } = [typeof(Components.HelloComponent)];
-    protected override List<Type> BlacklistedTypes { get; } = [];
+    protected override HashSet<Type> WhitelistedTypes { get; } = [typeof(Components.HelloComponent)];
+    protected override HashSet<Type> BlacklistedTypes { get; } = [];
 
     protected override void _SystemReady()
     {

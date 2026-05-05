@@ -30,6 +30,7 @@ public partial class TileGridComponent : ComponentBase
         PresentNW = 1 << 14,
         PresentSW = 1 << 15
     }
+
     public Mask[] DefaultNeighborMapping { get; private set; } =
     [
         Mask.AbsentS | Mask.AbsentW | Mask.AbsentE | Mask.AbsentN,
@@ -47,10 +48,8 @@ public partial class TileGridComponent : ComponentBase
         Mask.PresentS | Mask.PresentW | Mask.AbsentSW,
         0
     ];
-    
+
     public Dictionary<Vector2I, TileResource> Tiles = new();
-
+    public Vector2I TileSize { get; private set; } = new(32, 32);
     public bool FirstTimeProcessed = false;
-
-    public Vector2I TileSize { get; private set; } = new Vector2I(32, 32);
 }

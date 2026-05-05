@@ -1,0 +1,121 @@
+[gd_scene format=3 uid="uid://mulljklk3fvf"]
+
+[ext_resource type="Texture2D" uid="uid://cr7fdgxuhaj03" path="res://Assets/Textures/NuTileTemplate.png" id="1_q8lwv"]
+[ext_resource type="Texture2D" uid="uid://da12rx7uyua01" path="res://Assets/Resources/new_atlas_texture.tres" id="2_q8lwv"]
+[ext_resource type="Texture2D" uid="uid://b1sdxm4ifx16g" path="res://Assets/FugueIcons/cursor.png" id="3_qla2t"]
+[ext_resource type="Texture2D" uid="uid://c872tsf4fyv82" path="res://Assets/FugueIcons/pencil.png" id="4_ustil"]
+[ext_resource type="Texture2D" uid="uid://b1emgcf8fanv3" path="res://Assets/FugueIcons/paint-can.png" id="5_mh51j"]
+[ext_resource type="Texture2D" uid="uid://b507tv3veiyyr" path="res://Assets/FugueIcons/pipette.png" id="6_nhfci"]
+[ext_resource type="Texture2D" uid="uid://d3ra3rmbgtv8r" path="res://Assets/FugueIcons/control-stop-square.png" id="7_sjvsk"]
+[ext_resource type="Texture2D" uid="uid://byf2l0rfhjp34" path="res://Assets/FugueIcons/arrow.png" id="8_tllty"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2nm4g"]
+atlas = ExtResource("1_q8lwv")
+region = Rect2(0, 0, 32, 32)
+
+[node name="Tileware" type="Control" unique_id=1077486305]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="Panel" parent="." unique_id=1838184669]
+layout_mode = 1
+anchors_preset = 9
+anchor_bottom = 1.0
+offset_right = 230.0
+grow_vertical = 2
+
+[node name="Control" type="Control" parent="Panel" unique_id=1938945903]
+layout_mode = 1
+anchors_preset = 9
+anchor_bottom = 1.0
+offset_right = 188.0
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel/Control" unique_id=1787896344]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 1
+
+[node name="ItemList" type="ItemList" parent="Panel/Control/VBoxContainer" unique_id=1293089486]
+layout_mode = 2
+size_flags_vertical = 3
+item_count = 7
+max_columns = 5
+fixed_icon_size = Vector2i(32, 32)
+item_0/icon = SubResource("AtlasTexture_2nm4g")
+item_1/icon = ExtResource("2_q8lwv")
+item_2/icon = ExtResource("2_q8lwv")
+item_3/icon = ExtResource("2_q8lwv")
+item_4/icon = ExtResource("2_q8lwv")
+item_5/icon = ExtResource("2_q8lwv")
+item_6/icon = ExtResource("2_q8lwv")
+
+[node name="CheckButton" type="CheckButton" parent="Panel/Control/VBoxContainer" unique_id=1026832692]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Names"
+
+[node name="LineEdit" type="LineEdit" parent="Panel/Control/VBoxContainer" unique_id=330239163]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 8
+placeholder_text = "Search"
+
+[node name="Label" type="Label" parent="Panel/Control/VBoxContainer" unique_id=1941528299]
+layout_mode = 2
+text = "Tool Options:"
+
+[node name="CheckBox" type="CheckBox" parent="Panel/Control/VBoxContainer" unique_id=1082724765]
+layout_mode = 2
+text = "Fill Shape"
+
+[node name="CheckBox2" type="CheckBox" parent="Panel/Control/VBoxContainer" unique_id=1537535676]
+layout_mode = 2
+text = "Eyedropper Once"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel" unique_id=1093734872]
+layout_mode = 1
+anchors_preset = 11
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 0
+grow_vertical = 2
+
+[node name="Button" type="Button" parent="Panel/VBoxContainer" unique_id=280241342]
+layout_mode = 2
+text = "C"
+icon = ExtResource("3_qla2t")
+
+[node name="Button2" type="Button" parent="Panel/VBoxContainer" unique_id=1473939819]
+layout_mode = 2
+text = "B"
+icon = ExtResource("4_ustil")
+
+[node name="Button3" type="Button" parent="Panel/VBoxContainer" unique_id=437598250]
+layout_mode = 2
+text = "G"
+icon = ExtResource("5_mh51j")
+
+[node name="Button6" type="Button" parent="Panel/VBoxContainer" unique_id=434377805]
+layout_mode = 2
+text = "I"
+icon = ExtResource("6_nhfci")
+
+[node name="Button4" type="Button" parent="Panel/VBoxContainer" unique_id=1295059358]
+layout_mode = 2
+text = "R"
+icon = ExtResource("7_sjvsk")
+
+[node name="Button5" type="Button" parent="Panel/VBoxContainer" unique_id=671566177]
+layout_mode = 2
+text = "L"
+icon = ExtResource("8_tllty")

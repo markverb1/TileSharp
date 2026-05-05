@@ -12,7 +12,7 @@ public partial class Entity : Resource
     public int Guid { get; } = ECS.Instance.LastGuid;
     public World MyWorld { get; internal set; }
     public StringName EntityName;
-    
+
     public Entity() => EntityName = Guid.ToString();
 
     public Entity(string name) => EntityName = name;
@@ -22,10 +22,10 @@ public partial class Entity : Resource
     /// </summary>
     /// <typeparam name="T">Type of component.</typeparam>
     /// <returns>Created component.</returns>
-    public ComponentBase AddComponent<T>() where T : ComponentBase, new()
+    public ComponentBase AddComponent<T>(bool replaceComponent = false) where T : ComponentBase, new()
     {
         var c = _components.OfType<T>().FirstOrDefault();
-        if (c != null) return c;
+        if (c is not null && !replaceComponent) return c;
         var component = new T();
         _components.Add(component);
         MyWorld.IndexEntityComponent(this, component);
@@ -41,7 +41,9 @@ public partial class Entity : Resource
         var existingIndex = _components.FindIndex(x => x.GetType() == type);
         if (existingIndex != -1)
         {
+            MyWorld.UnindexEntityComponent(this, _components[existingIndex]); // remove old
             _components[existingIndex] = component;
+            MyWorld.IndexEntityComponent(this, component); // add new
             return component;
         }
 
@@ -53,11 +55,11 @@ public partial class Entity : Resource
     public void RemoveComponent<T>() where T : ComponentBase
     {
         var component = _components.Find(x => x.GetType() == typeof(T));
-        if (component != null)
+        if (component is not null)
         {
             MyWorld.UnindexEntityComponent(this, component);
             _components.Remove(component);
-            //component.Free();
+            component.Free();
         }
     }
 
@@ -65,5 +67,6 @@ public partial class Entity : Resource
     {
         return _components.Find(x => x.GetType() == typeof(T)) as T;
     }
+
     public bool HasComponent<T>() where T : ComponentBase => GetComponent<T>() != null;
 }

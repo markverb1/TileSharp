@@ -6,5 +6,6 @@
 [resource]
 script = ExtResource("1_ngex7")
 TileTexture = ExtResource("1_jt3er")
-Mapping = null
+TileName = "Example"
+WhitelistedTags = Array[String](["Wall"])
 metadata/_custom_type_script = "uid://cy2vqomhfj6ke"

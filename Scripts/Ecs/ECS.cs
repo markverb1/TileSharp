@@ -11,6 +11,7 @@ public sealed partial class ECS : Node
 
     private int _lastGuid = 0;
 
+
     public int LastGuid
     {
         get => _lastGuid++;
@@ -41,20 +42,24 @@ public sealed partial class ECS : Node
     public Entity GetEntityByGuid(int guid)
     {
         foreach (World world in GetChildren().OfType<World>())
-        { //if (world.Guid == guid) return world;
+        {
+            //if (world.Guid == guid) return world;
             foreach (var entity in world.Entities)
             {
                 if (entity.Guid == guid) return entity;
             }
         }
+
         return null;
     }
+
     public Node GetEcsNodeByGuid(int guid)
     {
         foreach (World world in GetChildren().OfType<World>())
-        { 
+        {
             if (world.Guid == guid) return world;
         }
+
         return null;
     }
 

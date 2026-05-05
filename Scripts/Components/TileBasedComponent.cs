@@ -1,5 +1,3 @@
-using System;
-using System.Diagnostics.CodeAnalysis;
 using Godot;
 using TileSharp.Ecs;
 

@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Godot;
-using TileSharp.Systems;
 
 namespace TileSharp.Ecs;
 
@@ -10,74 +9,77 @@ public partial class World : Node
 {
     public int Guid { get; init; } = ECS.Instance.LastGuid;
 
-    private readonly Dictionary<Type, List<Entity>> _componentIndex = new();
-    public IReadOnlyDictionary<Type, List<Entity>> ComponentIndex => _componentIndex;
+    private readonly Dictionary<Type, HashSet<Entity>> _componentIndex = new();
+    public IReadOnlyDictionary<Type, HashSet<Entity>> ComponentIndex => _componentIndex;
 
-    private List<Entity> _entities = new();
-    public IReadOnlyList<Entity> Entities => _entities;
+    private HashSet<Entity> _entities = new();
+    public IReadOnlySet<Entity> Entities => _entities;
 
     private SubViewport _subViewport;
-    public SubViewport Viewport {
+
+    public SubViewport Viewport
+    {
         get => _subViewport;
         set => _subViewport ??= value;
     }
-    
+
+    private Dictionary<Type, List<Delegate>> _broadcastSubscribers = new();
+    private Dictionary<Type, List<(Type component, Delegate callback)>> _directedSubscribers = new();
+
+
     public event Action<Type, Entity> OnEntityAddedToIndex;
     public event Action<Type, Entity> OnEntityRemovedFromIndex;
-    //public delegate void AddToIndex(string componentType, Entity entity);
 
-    //[Signal]
-    //public delegate void RemoveFromIndexEventHandler(string componentType, Entity entity);
 
-    // [Signal]
-    // public delegate void RemoveEntityFromIndexEventHandler(Entity entity);
-    //public List<Entity> QueryType<T>() where T : Component => _componentIndex.GetValueOrDefault(typeof(T));
-
-    public List<Entity> QueryEntities(IEnumerable<Type> whitelist, IEnumerable<Type> blacklist)
+    public HashSet<Entity> QueryEntities(IEnumerable<Type> whitelist, IEnumerable<Type> blacklist,
+        bool allRequired = true)
     {
-        var result = new HashSet<Entity>();
-        var whitelistSet = new HashSet<Type>(whitelist);
+        HashSet<Entity> result = QueryEntities(whitelist, allRequired);
         var blacklistSet = new HashSet<Type>(blacklist);
 
-        foreach (var (type, entities) in _componentIndex)
+        foreach (var type in blacklistSet)
         {
-            if (whitelistSet.Contains(type))
-                foreach (var entity in entities)
-                    result.Add(entity);
-            else if (blacklistSet.Contains(type))
-                foreach (var entity in entities)
-                    result.Remove(entity);
+            if (!_componentIndex.TryGetValue(type, out var entities)) continue;
+            result ??= new HashSet<Entity>();
+            result.ExceptWith(entities);
+            if (result.Count == 0) return [];
         }
 
-        return result.ToList();
+        return result;
     }
 
-    public List<Entity> QueryEntities(IEnumerable<Type> whitelist)
+    public HashSet<Entity> QueryEntities(IEnumerable<Type> whitelist, bool allRequired = true)
     {
-        var result = new HashSet<Entity>();
         var whitelistSet = new HashSet<Type>(whitelist);
+        HashSet<Entity> result = null;
 
-        foreach (var (type, entities) in _componentIndex)
-        {
-            if (whitelistSet.Contains(type))
-                foreach (var entity in entities)
-                    result.Add(entity);
-        }
+        if (!allRequired)
+            foreach (var type in whitelistSet)
+            {
+                if (!_componentIndex.TryGetValue(type, out var entities)) continue;
+                result ??= new HashSet<Entity>();
+                result.UnionWith(entities);
+            }
+        else
+            foreach (var type in whitelistSet)
+            {
+                if (!_componentIndex.TryGetValue(type, out var entities)) continue;
+                result ??= [..entities];
+                result.IntersectWith(entities);
+                if (result.Count == 0) return [];
+            }
 
-        return result.ToList();
+
+        return result ?? [];
     }
-    public List<Entity> QueryEntities(Type whitelist)
+
+    public HashSet<Entity> QueryEntities(Type whitelist)
     {
         var result = new HashSet<Entity>();
-
         foreach (var (type, entities) in _componentIndex)
-        {
             if (type == whitelist)
-                foreach (var entity in entities)
-                    result.Add(entity);
-        }
-
-        return result.ToList();
+                result.UnionWith(entities);
+        return result;
     }
 
 
@@ -90,7 +92,7 @@ public partial class World : Node
     {
         if (!entity.Components.Contains(component)) return;
         var type = component.GetType();
-        if (!_componentIndex.ContainsKey(type)) _componentIndex[type] = new List<Entity>();
+        if (!_componentIndex.ContainsKey(type)) _componentIndex[type] = new HashSet<Entity>();
         OnEntityAddedToIndex?.Invoke(type, entity);
         _componentIndex[type].Add(entity);
     }
@@ -113,7 +115,7 @@ public partial class World : Node
         foreach (var component in entity.Components)
         {
             var type = component.GetType();
-            if (!_componentIndex.ContainsKey(type)) _componentIndex[type] = new List<Entity>();
+            if (!_componentIndex.ContainsKey(type)) _componentIndex[type] = new HashSet<Entity>();
             if (!_componentIndex[type].Contains(entity))
             {
                 OnEntityAddedToIndex?.Invoke(type, entity);
@@ -203,7 +205,6 @@ public partial class World : Node
 
     public override void _Ready()
     {
-
     }
 
     public override void _Process(double delta)

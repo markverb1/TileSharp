@@ -6,5 +6,5 @@
 [resource]
 script = ExtResource("1_l6aa8")
 TileTexture = ExtResource("1_2wps7")
-Mapping = null
+TileName = "Wall"
 metadata/_custom_type_script = "uid://cy2vqomhfj6ke"

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Godot;
 using TileSharp.Components;
 using TileSharp.Ecs;
@@ -11,10 +12,10 @@ public partial class TileGridSystem : SystemBase
 {
     public Node2D TilesParent { get; private set; }
 
-    protected override List<Type> WhitelistedTypes { get; } = [typeof(TileGridComponent)];
-    protected override List<Type> BlacklistedTypes { get; } = [];
+    protected override HashSet<Type> WhitelistedTypes { get; } = [typeof(TileGridComponent)];
+    protected override HashSet<Type> BlacklistedTypes { get; } = [];
 
-    private readonly List<TileMapLayer> _layers = [];
+    private readonly HashSet<TileMapLayer> _layers = [];
     private TileSet _tileSet = new();
     private Dictionary<Texture, int> _textureToAtlasId = new();
 
@@ -39,7 +40,7 @@ public partial class TileGridSystem : SystemBase
 
         var tgComponent = new TileGridComponent();
         //var idx = 0;
-        _tileSet.TileSize =  new Vector2I(32, 32);
+        _tileSet.TileSize = new Vector2I(32, 32);
         //_tileSet.TileSize = tgComponent.TileSize;
         for (int idx = 0; idx < tgComponent.DefaultNeighborMapping.Length; idx++)
         {
@@ -91,30 +92,44 @@ public partial class TileGridSystem : SystemBase
         }
     }
 
+    private static readonly (Vector2I Offset, TileGridComponent.Mask Present, TileGridComponent.Mask Absent)[]
+        Directions =
+        {
+            (new Vector2I(0, -1), TileGridComponent.Mask.PresentN, TileGridComponent.Mask.AbsentN),
+            (new Vector2I(0, 1), TileGridComponent.Mask.PresentS, TileGridComponent.Mask.AbsentS),
+            (new Vector2I(1, 0), TileGridComponent.Mask.PresentE, TileGridComponent.Mask.AbsentE),
+            (new Vector2I(-1, 0), TileGridComponent.Mask.PresentW, TileGridComponent.Mask.AbsentW),
+            (new Vector2I(1, -1), TileGridComponent.Mask.PresentNE, TileGridComponent.Mask.AbsentNE),
+            (new Vector2I(1, 1), TileGridComponent.Mask.PresentSE, TileGridComponent.Mask.AbsentSE),
+            (new Vector2I(-1, -1), TileGridComponent.Mask.PresentNW, TileGridComponent.Mask.AbsentNW),
+            (new Vector2I(-1, 1), TileGridComponent.Mask.PresentSW, TileGridComponent.Mask.AbsentSW),
+        };
+
     TileGridComponent.Mask GetBitMask(Dictionary<Vector2I, TileResource> tiles, Vector2I origin)
     {
-        TileGridComponent.Mask mask = 0;
-
-        if (GetNeighbor(tiles, origin, new Vector2I(0, -1)) is not null) mask |= TileGridComponent.Mask.PresentN;
-        else mask |= TileGridComponent.Mask.AbsentN;
-        if (GetNeighbor(tiles, origin, new Vector2I(0, 1)) is not null) mask |= TileGridComponent.Mask.PresentS;
-        else mask |= TileGridComponent.Mask.AbsentS;
-        if (GetNeighbor(tiles, origin, new Vector2I(1, 0)) is not null) mask |= TileGridComponent.Mask.PresentE;
-        else mask |= TileGridComponent.Mask.AbsentE;
-        if (GetNeighbor(tiles, origin, new Vector2I(-1, 0)) is not null) mask |= TileGridComponent.Mask.PresentW;
-        else mask |= TileGridComponent.Mask.AbsentW;
-        if (GetNeighbor(tiles, origin, new Vector2I(1, -1)) is not null) mask |= TileGridComponent.Mask.PresentNE;
-        else mask |= TileGridComponent.Mask.AbsentNE;
-        if (GetNeighbor(tiles, origin, new Vector2I(1, 1)) is not null) mask |= TileGridComponent.Mask.PresentSE;
-        else mask |= TileGridComponent.Mask.AbsentSE;
-        if (GetNeighbor(tiles, origin, new Vector2I(-1, -1)) is not null) mask |= TileGridComponent.Mask.PresentNW;
-        else mask |= TileGridComponent.Mask.AbsentNW;
-        if (GetNeighbor(tiles, origin, new Vector2I(-1, 1)) is not null) mask |= TileGridComponent.Mask.PresentSW;
-        else mask |= TileGridComponent.Mask.AbsentSW;
-
-        return mask;
+        return Directions.Aggregate(
+            (TileGridComponent.Mask)0,
+            (mask, d) => mask | (GetNeighbor(tiles, origin, d.Offset) is not null ? d.Present : d.Absent)
+        );
     }
 
-    TileResource GetNeighbor(Dictionary<Vector2I, TileResource> tiles, Vector2I origin, Vector2I offset) =>
-        tiles.GetValueOrDefault(origin + offset, null);
+    TileResource GetNeighbor(Dictionary<Vector2I, TileResource> tiles, Vector2I origin, Vector2I offset,
+        bool nullIfNotTilable = true)
+    {
+        var source = tiles.GetValueOrDefault(origin);
+        if (source is null) return null;
+
+        var neighbor = tiles.GetValueOrDefault(origin + offset);
+        if (neighbor is null) return null;
+
+        return nullIfNotTilable && !source.CanAutotileWith(neighbor) ? null : neighbor;
+    }
+
+    // bool IsAutotilable(TileResource originTile, TileResource neighborTile)
+    // {
+    //     originTile.BlacklistedTags.Select(x => x.source)
+    //         .Intersect(neighborTile.BlacklistedTags)
+    //         .Any(); 
+    //     if (!(neighborTile.TileTags.Contains()))
+    // }
 }
